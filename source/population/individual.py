@@ -5,24 +5,24 @@ from source.utils.binary_utils import BinaryUtils
 
 class Individual:
 
-    def __init__(self, number_of_genes, binary_length, start_interval, end_interval, generate=True):
-        self.number_of_genes = number_of_genes
+    def __init__(self, number_of_chromosomes, number_of_genes, start_interval, end_interval, generate=True):
+        self.number_of_chromosomes = number_of_chromosomes
         self.start_interval = start_interval
         self.end_interval = end_interval
-        self.binary_length = binary_length
-        self.chromosome = []
+        self.number_of_genes = number_of_genes
+        self.chromosomes = []
         if generate:
-            self.generate_chromosome()
+            self.generate_chromosomes()
 
-    def generate_chromosome(self):
-        self.chromosome = np.random.randint(0, 2, size=(self.number_of_genes, self.binary_length))
+    def generate_chromosomes(self):
+        self.chromosomes = np.random.randint(0, 2, size=(self.number_of_chromosomes, self.number_of_genes))
 
-    def decode_chromosome_representation(self):
-        return np.apply_along_axis(self.__decode_gene_representation, axis=1, arr=self.chromosome)
+    def decode_chromosomes_representation(self):
+        return np.apply_along_axis(self.__decode_chromosome_representation, axis=1, arr=self.chromosomes)
 
-    def __decode_gene_representation(self, gene):
-        return self.start_interval + (BinaryUtils.decode_number(gene) * (self.end_interval - self.start_interval)) / (
-                2 ** self.binary_length - 1)
+    def __decode_chromosome_representation(self, chromosome):
+        return self.start_interval + (BinaryUtils.decode_number(chromosome) * (self.end_interval - self.start_interval)) / (
+                2 ** self.number_of_genes - 1)
 
     def count_fitness_function(self, fitness_function):
-        return fitness_function(self.decode_chromosome_representation())
+        return fitness_function(self.decode_chromosomes_representation())
