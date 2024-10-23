@@ -5,12 +5,14 @@ from source.utils.binary_utils import BinaryUtils
 
 class Individual:
 
-    def __init__(self, number_of_genes, binary_length, start_interval, end_interval):
+    def __init__(self, number_of_genes, binary_length, start_interval, end_interval, generate=True):
         self.number_of_genes = number_of_genes
         self.start_interval = start_interval
         self.end_interval = end_interval
         self.binary_length = binary_length
         self.chromosome = []
+        if generate:
+            self.generate_chromosome()
 
     def generate_chromosome(self):
         self.chromosome = np.random.randint(0, 2, size=(self.number_of_genes, self.binary_length))
@@ -21,3 +23,6 @@ class Individual:
     def __decode_gene_representation(self, gene):
         return self.start_interval + (BinaryUtils.decode_number(gene) * (self.end_interval - self.start_interval)) / (
                 2 ** self.binary_length - 1)
+
+    def count_fitness_function(self, fitness_function):
+        return fitness_function(self.decode_chromosome_representation())
