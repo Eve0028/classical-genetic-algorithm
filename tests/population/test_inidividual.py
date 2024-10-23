@@ -30,5 +30,5 @@ def test_decode_chromosome_representation():
 def test_generate_chromosome():
     individual = Individual(5, 10, -10, 10)
     individual.generate_chromosomes()
-    chromosome = individual.chromosomes
-    assert chromosome.shape == (5, 10)
+    chromosomes = individual.chromosomes
+    assert chromosomes.shape == (5, 10)
