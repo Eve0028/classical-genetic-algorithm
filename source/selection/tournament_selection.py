@@ -17,14 +17,16 @@ class TournamentSelection(SelectionStrategy):
         if tournament_size > len(individuals):
             raise ValueError("Tournament size cannot be greater than the number of individuals.")
 
-        if len(individuals) % tournament_size != 0:
-            raise ValueError("The number of individuals must be divisible by the tournament size.")
-
         selected_individuals = []
         random.shuffle(individuals)  # Shuffle individuals to ensure random grouping
 
         # Split individuals into groups of tournament_size
         groups = [individuals[i:i + tournament_size] for i in range(0, len(individuals), tournament_size)]
+
+        # If the last group is smaller, we add it to the previous group
+        if len(groups[-1]) < tournament_size and len(groups) > 1:
+            groups[-2].extend(groups[-1])
+            groups.pop()
 
         for group in groups:
             winner = max(group, key=lambda ind: ind.count_fitness_function(fitness_function))
