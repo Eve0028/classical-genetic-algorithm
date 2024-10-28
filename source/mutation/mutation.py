@@ -5,10 +5,10 @@ class Mutation:
     @abstractmethod
     def mutate(self, individuals: list[Individual], mutation_probablity : float) -> list[Individual]:
         """
-        Mutate individuals base on chosen Mutate method
+        Mutate individuals base on chosen Mutate strategy
 
         :param individuals: The list of individuals to select from.
         :param mutation_probablity: Probability of mutation.
-        :return: New list of mutated Individuals.
+        :return: List of mutated Individuals.
         """
         pass

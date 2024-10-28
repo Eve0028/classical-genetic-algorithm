@@ -4,12 +4,10 @@ import random
 
 class OnePointMutation(Mutation):
     def mutate(self, individuals: list[Individual], mutation_probablity : float) -> list[Individual]:
-        mutated_individuals = individuals.copy()
-        for ind in mutated_individuals:
-            if random.random() <= mutation_probablity:
-                chromosomes_count = len(ind.chromosomes)
-                i = random.randint(0, chromosomes_count - 1)
-                j = random.randint(0, len(ind.chromosomes[i]) - 1)
-                ind.chromosomes[i][j] = abs(1 - ind.chromosomes[i][j])
+        for individual in individuals:
+            for chromosome in individual.chromosomes:
+                if random.random() <= mutation_probablity:
+                    gene = random.randint(0, len(chromosome) - 1)
+                    chromosome[gene] = abs(1 - chromosome[gene])
 
-        return mutated_individuals
+        return individuals

@@ -4,12 +4,10 @@ import random
 
 class BoundaryMutation(Mutation):
     def mutate(self, individuals: list[Individual], mutation_probablity : float) -> list[Individual]:
-        mutated_individuals = individuals.copy()
-        for ind in mutated_individuals:
-            if random.random() <= mutation_probablity:
-                chromosomes_count = len(ind.chromosomes)
-                i = random.randint(0, chromosomes_count - 1)
-                ind.chromosomes[i][0] = abs(1 - ind.chromosomes[i][0])
-                ind.chromosomes[i][-1] = abs(1 - ind.chromosomes[i][-1])
+        for individual in individuals:
+            for chromosome in individual.chromosomes:
+                if random.random() <= mutation_probablity:
+                    chromosome[0] = abs(1 - chromosome[0])
+                    chromosome[-1] = abs(1 - chromosome[-1])
 
-        return mutated_individuals
+        return individuals
