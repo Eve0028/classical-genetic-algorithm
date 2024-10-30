@@ -41,4 +41,4 @@ class Population:
                            generate=True) for _ in range(self.population_size)]
 
     def select(self, **kwargs) -> list[Individual]:
-        return self.selection_strategy.select(self.individuals, self.fitness_function, self.selection_size, **kwargs)
+        return self.selection_strategy.select(self.individuals, self.fitness_function)
