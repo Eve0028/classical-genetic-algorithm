@@ -1,19 +1,27 @@
 import random
+from typing import override, List, Callable
+
 from source.selection.selection_strategy import SelectionStrategy
 from source.population.individual import Individual
 
 
 class TournamentSelection(SelectionStrategy):
-    def select(self, individuals: list[Individual], fitness_function, tournament_size: int = 3,
-               **kwargs) -> list[Individual]:
+    @override
+    def select(self, individuals: List[Individual], fitness_function: Callable,
+               **kwargs) -> List[Individual]:
         """
         Selects individuals using tournament selection.
 
         :param individuals: List of individuals in the population.
         :param fitness_function: Fitness function to evaluate individuals.
-        :param tournament_size: Number of individuals in each tournament.
+        :param kwargs: Additional keyword arguments for selection strategies.
+        :keyword tournament_size: Number of individuals in each tournament.
         :return: List of selected individuals.
+        :raises ValueError: If tournament_size is not specified or is greater than the number of individuals.
         """
+        tournament_size = kwargs.get('tournament_size')
+        if tournament_size is None:
+            raise ValueError("Tournament size must be specified.")
         if tournament_size > len(individuals):
             raise ValueError("Tournament size cannot be greater than the number of individuals.")
 

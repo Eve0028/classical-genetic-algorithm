@@ -4,14 +4,13 @@ from source.population.individual import Individual
 
 class SelectionStrategy(ABC):
     @abstractmethod
-    def select(self, individuals: list[Individual], fitness_function, selection_size: int, **kwargs) -> list[
+    def select(self, individuals: list[Individual], fitness_function, **kwargs) -> list[
         Individual]:
         """
         Selects a subset of individuals based on the implemented selection strategy.
 
         :param individuals: The list of individuals to select from.
         :param fitness_function: callable - The function used to evaluate the fitness of individuals.
-        :param selection_size: The number of individuals to select.
         :param kwargs: Additional keyword arguments specific to the selection strategy.
         :return: The selected subset of individuals.
         """

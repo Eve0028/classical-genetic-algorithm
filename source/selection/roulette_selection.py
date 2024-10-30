@@ -1,11 +1,14 @@
 import random
 import bisect
+from typing import override
+
 from source.selection.selection_strategy import SelectionStrategy
 from source.population.individual import Individual
 
 
 class RouletteSelection(SelectionStrategy):
-    def select(self, individuals: list[Individual], fitness_function, selection_size: int, **kwargs) -> list[
+    @override
+    def select(self, individuals: list[Individual], fitness_function, **kwargs) -> list[
         Individual]:
         """
         Selects individuals based on their fitness using roulette wheel selection.
@@ -13,9 +16,14 @@ class RouletteSelection(SelectionStrategy):
         :param individuals: List of individuals in the population.
         :param fitness_function: Fitness function to evaluate individuals.
             For the minimization problem, the passed fitness function is already inverted.
-        :param selection_size: Number of individuals to select.
+        :keyword selection_size: Number of returned individuals.
         :return: List of selected individuals.
+        :raises ValueError: If selection_size is not specified.
         """
+        selection_size = kwargs.get('selection_size')
+        if selection_size is None:
+            raise ValueError("Selection size must be specified.")
+
         # Calculate the fitness values for each individual and the total sum of the fitnesses
         fitness_values = [ind.count_fitness_function(fitness_function) for ind in individuals]
         total_fitness = sum(fitness_values)
