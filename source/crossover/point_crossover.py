@@ -19,10 +19,10 @@ class PointCrossover(Crossover):
         chromosome_size = population[0].number_of_chromosomes
         i = self.crossover_number
         while i > 0:
+            individual1, individual2 = self.generate_individuals(population)
             not_crossover = np.random.rand()
             if self.crossover_probability < not_crossover:
                 continue
-            individual1, individual2 = self.generate_individuals(population)
             intersection_points = self.generate_intersection_points(self.intersection_number, chromosome_size)
             self.cross_individuals(individual1, individual2, chromosome_size, intersection_points)
             new_population.append(individual1)
