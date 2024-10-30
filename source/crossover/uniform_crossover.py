@@ -7,15 +7,17 @@ import copy
 class UniformCrossover(Crossover):
 
     def __init__(self, crossover_probability=0.8):
-        self.crossover_probability = crossover_probability
+        super().__init__(crossover_probability)
 
     def cross(self, population: List[Individual]) -> list[Individual]:
-        if len(population) % 2 != 0:
-            self.cross_individuals(copy.deepcopy(population[len(population) - 2]), population[len(population) - 1])
-
+        self.cross_last_individual_if_population_is_odd(population)
         for i in range(0, len(population) - 1, 2):
             self.cross_individuals(population[i], population[i + 1])
         return population
+
+    def cross_last_individual_if_population_is_odd(self, population: List[Individual]):
+        if len(population) % 2 != 0:
+            self.cross_individuals(copy.deepcopy(population[len(population) - 2]), population[len(population) - 1])
 
     def cross_individuals(self, individual1: Individual, individual2: Individual):
         for chromosome1, chromosome2 in zip(individual1.chromosomes, individual2.chromosomes):

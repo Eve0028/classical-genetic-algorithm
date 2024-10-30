@@ -8,16 +8,15 @@ from source.crossover.random_generator import RandomGenerator
 
 class PointCrossover(Crossover):
 
-    def __init__(self, intersection_number: int, crossover_number: int, crossover_probability =0.8):
-        self.crossover_probability = crossover_probability
+    def __init__(self, intersection_number: int, crossover_size: int, crossover_probability=0.8):
+        super().__init__(crossover_probability)
         self.intersection_number = intersection_number
-        self.crossover_number = crossover_number
+        self.crossover_size = crossover_size
 
     def cross(self, population: List[Individual]) -> list[Individual]:
-
         new_population = []
         chromosome_size = population[0].number_of_chromosomes
-        i = self.crossover_number
+        i = self.crossover_size
         while i > 0:
             individual1, individual2 = self.generate_individuals(population)
             not_crossover = np.random.rand()
@@ -46,7 +45,6 @@ class PointCrossover(Crossover):
             intersection_points = RandomGenerator.generate_random_list(2, 1, chromosome_size)
             intersection_points = sorted(intersection_points)
         return intersection_points
-
 
     def cross_individuals(self, individual1: Individual, individual2: Individual, chromosome_size: int,
                           intersection: List[int]) -> None:
