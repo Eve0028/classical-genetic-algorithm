@@ -13,19 +13,16 @@ class RouletteSelection(SelectionStrategy):
         """
         self.selection_size = selection_size
 
-    def select(self, individuals: list[Individual], fitness_function) -> list[
-        Individual]:
+    def select(self, individuals: list[Individual]) -> list[Individual]:
         """
         Selects individuals based on their fitness using roulette wheel selection.
 
         :param individuals: List of individuals in the population.
-        :param fitness_function: Fitness function to evaluate individuals.
-            For the minimization problem, the passed fitness function is already inverted.
         :return: List of selected individuals.
         """
 
-        # Calculate the fitness values for each individual and the total sum of the fitnesses
-        fitness_values = [ind.count_fitness_function(fitness_function) for ind in individuals]
+        # Calculate the total sum of the fitnesses
+        fitness_values = [ind.fitness for ind in individuals]
         total_fitness = sum(fitness_values)
 
         # Normalization and calculation of the distribution

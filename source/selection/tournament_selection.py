@@ -13,12 +13,11 @@ class TournamentSelection(SelectionStrategy):
         """
         self.tournament_size = tournament_size
 
-    def select(self, individuals: List[Individual], fitness_function: Callable) -> List[Individual]:
+    def select(self, individuals: List[Individual]) -> List[Individual]:
         """
         Selects individuals using tournament selection.
 
         :param individuals: List of individuals in the population.
-        :param fitness_function: Fitness function to evaluate individuals.
         :return: List of selected individuals.
         :raises ValueError: If tournament_size is greater than the number of individuals.
         """
@@ -37,7 +36,7 @@ class TournamentSelection(SelectionStrategy):
             groups.pop()
 
         for group in groups:
-            winner = max(group, key=lambda ind: ind.count_fitness_function(fitness_function))
+            winner = max(group, key=lambda ind: ind.fitness)
             selected_individuals.append(winner)
 
         return selected_individuals
