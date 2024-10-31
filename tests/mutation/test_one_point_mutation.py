@@ -12,8 +12,8 @@ def get_starting_population(chromosomes : int, genes : int) -> list[Individual]:
 def test_one_point_mutation_one_chromosome_max_probability():
     individuals = get_starting_population(1, 10)
 
-    mutation_strategy = OnePointMutation()
-    mutated_individuals = mutation_strategy.mutate(individuals, 1.0)
+    mutation_strategy = OnePointMutation(1.0)
+    mutated_individuals = mutation_strategy.mutate(individuals)
 
     count = 0
     for i in mutated_individuals:
@@ -22,25 +22,11 @@ def test_one_point_mutation_one_chromosome_max_probability():
 
     assert count == len(individuals)
 
-def test_one_point_mutation_one_chromosome_min_probability():
-    individuals = get_starting_population(1, 10)
-
-    mutation_strategy = OnePointMutation()
-    mutated_individuals = mutation_strategy.mutate(individuals, 0.5)
-
-    count = 0
-    for i in mutated_individuals:
-        if any(i.chromosomes[0]) == 1:
-            count += 1
-
-    assert 1 < count <= len(individuals)
-
-
 def test_best_selection_multiple_chromosomes_max_probability():
     individuals = get_starting_population(3, 10)
 
-    mutation_strategy = OnePointMutation()
-    mutated_individuals = mutation_strategy.mutate(individuals, 1.0)
+    mutation_strategy = OnePointMutation(1.0)
+    mutated_individuals = mutation_strategy.mutate(individuals)
 
     count = 0
     for i in mutated_individuals:

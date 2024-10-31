@@ -12,8 +12,8 @@ def get_starting_population(chromosomes : int, genes : int) -> list[Individual]:
 def test_boundary_mutation_one_chromosome_max_probability():
     individuals = get_starting_population(1, 10)
 
-    mutation_strategy = BoundaryMutation()
-    mutated_individuals = mutation_strategy.mutate(individuals, 1.0)
+    mutation_strategy = BoundaryMutation(1.0)
+    mutated_individuals = mutation_strategy.mutate(individuals)
 
     assert all(individual.chromosomes[0][0] == 1 for individual in mutated_individuals)
     assert all(individual.chromosomes[0][-1] == 1 for individual in mutated_individuals)
@@ -22,8 +22,8 @@ def test_boundary_mutation_one_chromosome_max_probability():
 def test_boundary_mutation_many_chromosome_max_probability():
     individuals = get_starting_population(3, 10)
 
-    mutation_strategy = BoundaryMutation()
-    mutated_individuals = mutation_strategy.mutate(individuals, 1.0)
+    mutation_strategy = BoundaryMutation(1.0)
+    mutated_individuals = mutation_strategy.mutate(individuals)
 
     assert all(chromosome[0] == 1 for individual in mutated_individuals for chromosome in individual.chromosomes)
     assert all(chromosome[-1] == 1 for individual in mutated_individuals for chromosome in individual.chromosomes)
