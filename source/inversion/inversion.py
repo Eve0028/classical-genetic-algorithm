@@ -2,18 +2,19 @@ from source.population.individual import Individual
 import random
 
 class Inversion:
-    @staticmethod
-    def inverse(individuals: list[Individual], inversion_probablity : float) -> list[Individual]:
+    def __init__(self, inversion_probability : float = 0.2) -> None:
+        self.inversion_probability = inversion_probability
+
+    def inverse(self, individuals: list[Individual]) -> list[Individual]:
         """
         Inverse individual's genes.
 
         :param individuals: List of individuals in the population.
-        :param inversion_probablity: Probability of inversion.
         :return: List of modified individuals.
         """
         for individual in individuals:
             for chromosome in individual.chromosomes:
-                if random.random() <= inversion_probablity:
+                if random.random() <= self.inversion_probability:
                     start = random.randint(0, len(chromosome) - 1)
                     end = random.randint(0, len(chromosome) - 1)
                     while start == end:
@@ -22,7 +23,6 @@ class Inversion:
                     if start > end:
                         start, end = end, start
 
-                    for gene in range(start, end + 1):
-                        chromosome[gene] = abs(1 - chromosome[gene])
+                    chromosome[start : end + 1] = chromosome[start : end + 1][::-1]
 
         return individuals
