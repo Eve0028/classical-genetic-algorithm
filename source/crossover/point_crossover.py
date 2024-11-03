@@ -9,7 +9,7 @@ from source.crossover.random_generator import RandomGenerator
 class PointCrossover(Crossover):
 
     def __init__(self, intersection_number: int, crossover_size: int, crossover_probability=0.8):
-        super().__init__(crossover_probability)
+        super().__init__(crossover_size, crossover_probability)
         self.intersection_number = intersection_number
         self.crossover_size = crossover_size
 
@@ -28,14 +28,8 @@ class PointCrossover(Crossover):
             new_population.append(individual2)
             i -= 2
 
-        return new_population
+        return new_population[:self.crossover_size]
 
-    def generate_individuals(self, population: List[Individual]):
-        population_size = len(population)
-        individuals_index = RandomGenerator.generate_random_list(2, 0, population_size)
-        individual1 = population[individuals_index[0]]
-        individual2 = population[individuals_index[1]]
-        return individual1, individual2
 
     def generate_intersection_points(self, intersection_number: int, chromosome_size: int) -> List[int]:
         if intersection_number == 1:

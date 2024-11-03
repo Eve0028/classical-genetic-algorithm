@@ -18,11 +18,10 @@ def test_cross_when_probability_is_max():
     individual2 = Individual(0, 0, 0, 0, False)
     individual2.chromosomes = chromosomes_ones.copy()
 
-    population = discrete_crossover.cross([individual1, individual2])
+    chromosome = discrete_crossover.generate_chromosome(individual1, individual2, 3, 10)
 
-    np.testing.assert_array_equal(population[0].chromosomes, chromosomes_zero)
-    np.testing.assert_array_equal(population[1].chromosomes, chromosomes_zero)
-    assert len(population) == 2
+    np.testing.assert_array_equal(chromosome, chromosomes_zero)
+
 
 
 def test_cross_when_probability_is_min():
@@ -40,11 +39,9 @@ def test_cross_when_probability_is_min():
     individual2 = Individual(0, 0, 0, 0, False)
     individual2.chromosomes = chromosomes_ones.copy()
 
-    population = discrete_crossover.cross([individual1, individual2])
+    chromosome = discrete_crossover.generate_chromosome(individual1, individual2, 3, 10)
 
-    np.testing.assert_array_equal(population[0].chromosomes, chromosomes_ones)
-    np.testing.assert_array_equal(population[1].chromosomes, chromosomes_ones)
-    assert len(population) == 2
+    np.testing.assert_array_equal(chromosome, chromosomes_ones)
 
 
 def test_cross():

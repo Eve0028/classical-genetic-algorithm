@@ -9,27 +9,20 @@ from source.crossover.random_generator import RandomGenerator
 class DiscreteCrossover(Crossover):
 
     def __init__(self, crossover_size: int, crossover_probability=0.5):
-        super().__init__(crossover_probability)
-        self.crossover_size = crossover_size
+        super().__init__(crossover_size, crossover_probability)
 
     def cross(self, population: List[Individual]) -> list[Individual]:
         new_population = []
+        chromosome_size = len(population[0].chromosomes)
+        number_of_genes = len(population[0].chromosomes[0])
         i = self.crossover_size
         while i > 0:
             individual1, individual2 = self.generate_individuals(population)
-            chromosomes = self.generate_chromosome(individual1, individual2, len(population[0].chromosomes),
-                                                   len(population[0].chromosomes[0]))
+            chromosomes = self.generate_chromosome(individual1, individual2, chromosome_size, number_of_genes)
             self.create_new_individual(individual1, chromosomes, new_population)
             i -= 1
 
-        return new_population
-
-    def generate_individuals(self, population: List[Individual]):
-        population_size = len(population)
-        individuals_index = RandomGenerator.generate_random_list(2, 0, population_size)
-        individual1 = population[individuals_index[0]]
-        individual2 = population[individuals_index[1]]
-        return individual1, individual2
+        return new_population[:self.crossover_size]
 
     def generate_chromosome(self, individual1: Individual, individual2: Individual, chromosome_size: int,
                             number_of_genes: int) -> list[list[int]]:
