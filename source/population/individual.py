@@ -49,3 +49,6 @@ class Individual:
         Calculates the fitness of the individual using the provided fitness function.
         """
         return fitness_function(self.decode_chromosomes_representation())
+
+    def copy(self) ->object:
+        return Individual(self.number_of_chromosomes, self.number_of_genes, self.start_interval, self.end_interval, False)
