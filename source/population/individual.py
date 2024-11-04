@@ -44,3 +44,6 @@ class Individual:
         """
         return self.start_interval + (BinaryUtils.decode_number(chromosome) * (self.end_interval - self.start_interval)) / (
                 2 ** self.number_of_genes - 1)
+
+    def copy(self) ->object:
+        return Individual(self.number_of_chromosomes, self.number_of_genes, self.start_interval, self.end_interval, False)
