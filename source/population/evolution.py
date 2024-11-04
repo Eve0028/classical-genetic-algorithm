@@ -2,6 +2,9 @@ from collections.abc import Callable
 from typing import List
 
 from source.population.individual import Individual
+from source.crossover.crossover import Crossover
+from source.mutation.mutation import Mutation
+from source.inversion.inversion import Inversion
 from source.selection.elite_strategy import apply_elite_strategy
 from source.selection.selection_strategy import SelectionStrategy
 
