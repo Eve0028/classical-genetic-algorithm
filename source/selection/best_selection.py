@@ -13,13 +13,12 @@ class BestSelection(SelectionStrategy):
         """
         self.selection_size = selection_size
 
-    def select(self, individuals: List[Individual], fitness_function) -> List[
+    def select(self, individuals: List[Individual]) -> List[
         Individual]:
         """
         Selects the top individuals based on their fitness.
 
         :param individuals: List of individuals in the population.
-        :param fitness_function: Fitness function to evaluate individuals.
         :return: List of top individuals.
         """
-        return apply_elite_strategy(individuals, self.selection_size, fitness_function)
+        return apply_elite_strategy(individuals, self.selection_size)

@@ -20,6 +20,7 @@ class Individual:
         self.chromosomes = []
         if generate:
             self.generate_chromosomes()
+        self.fitness = None
 
     def generate_chromosomes(self) -> None:
         """
@@ -43,12 +44,6 @@ class Individual:
         """
         return self.start_interval + (BinaryUtils.decode_number(chromosome) * (self.end_interval - self.start_interval)) / (
                 2 ** self.number_of_genes - 1)
-
-    def count_fitness_function(self, fitness_function) -> float:
-        """
-        Calculates the fitness of the individual using the provided fitness function.
-        """
-        return fitness_function(self.decode_chromosomes_representation())
 
     def copy(self) ->object:
         return Individual(self.number_of_chromosomes, self.number_of_genes, self.start_interval, self.end_interval, False)
