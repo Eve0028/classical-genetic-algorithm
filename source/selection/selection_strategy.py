@@ -1,11 +1,10 @@
-from abc import ABC, abstractmethod
+from abc import ABC
 from typing import List
 
 from source.population.individual import Individual
 
 
 class SelectionStrategy(ABC):
-    @abstractmethod
     def select(self, individuals: List[Individual]) -> List[Individual]:
         """
         Selects a subset of individuals based on the implemented selection strategy.

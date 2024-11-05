@@ -2,7 +2,6 @@ from source.crossover.crossover import Crossover
 from source.population.individual import Individual
 import numpy as np
 from typing import List
-import copy
 
 
 class UniformCrossover(Crossover):
@@ -18,9 +17,8 @@ class UniformCrossover(Crossover):
             self.cross_individuals(individual1, individual2)
             new_population.append(individual1)
             new_population.append(individual2)
-            i=i-2
+            i = i - 2
         return new_population[:self.crossover_size]
-
 
     def cross_individuals(self, individual1: Individual, individual2: Individual):
         for chromosome1, chromosome2 in zip(individual1.chromosomes, individual2.chromosomes):

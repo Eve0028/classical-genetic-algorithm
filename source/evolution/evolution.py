@@ -10,7 +10,9 @@ from source.selection.selection_strategy import SelectionStrategy
 
 
 class Evolution:
-    def __init__(self, individuals: List[Individual], number_of_generations: int, fitness_function: Callable, search_minimum: bool,
+    def __init__(self, individuals: List[Individual], number_of_generations: int,
+                 fitness_function: Callable,
+                 search_minimum: bool,
                  selection_strategy: SelectionStrategy,
                  crossover_strategy: Crossover,
                  mutation_strategy: Mutation,
@@ -44,7 +46,7 @@ class Evolution:
 
     def evaluate_fitness(self) -> None:
         for individual in self.individuals:
-            fitness_value = self.fitness_function(individual)
+            fitness_value = self.fitness_function(individual.decode_chromosomes_representation())
             individual.fitness = 1 / fitness_value if self.search_minimum else fitness_value
 
     def select(self) -> None:
@@ -77,8 +79,8 @@ class Evolution:
                 raise ValueError("The crossover strategy returned more individuals than the population size.")
 
             self.mutation()
-            if inversion:
-                self.individuals = inversion.inverse(self.individuals)
+            if self.inversion:
+                self.individuals = self.inversion.inverse(self.individuals)
 
             if self.elitism_size:
                 self.individuals.extend(self.elite)
