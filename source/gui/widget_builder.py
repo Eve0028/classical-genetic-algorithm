@@ -11,8 +11,7 @@ class WidgetBuilder:
         return EntryExt(master, text, entry_type)
 
     @staticmethod
-    def create_checkbox(master : Misc, text : str) -> Checkbutton:
-        checkbox_var = BooleanVar()
+    def create_checkbox(master : Misc, text : str, checkbox_var : BooleanVar) -> Checkbutton:
         checkbox = Checkbutton(master,
                          text=text,
                          font=FONT(ENTRY_FONT_SIZE),
@@ -30,8 +29,7 @@ class WidgetBuilder:
         return checkbox
 
     @staticmethod
-    def create_combobox(master : Misc, values : list) -> ttk.Combobox:
-        value = StringVar()
+    def create_combobox(master : Misc, values : list, value : StringVar) -> ttk.Combobox:
         combobox = ttk.Combobox(master,
                          width=COMBOBOX_WIDTH,
                          textvariable=value,
@@ -39,8 +37,8 @@ class WidgetBuilder:
         combobox.configure({"background": FG_COLOR, "foreground": BLACK})
         combobox['values'] = values
         combobox['state'] = "readonly"
-        combobox.pack(pady=ENTRY_PADY, ipady=3)
         combobox.current(0)
+        combobox.pack(pady=ENTRY_PADY, ipady=3)
         return combobox
 
     @staticmethod
