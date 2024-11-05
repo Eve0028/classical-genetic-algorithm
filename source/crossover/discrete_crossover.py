@@ -3,7 +3,6 @@ from typing import List
 from source.crossover.crossover import Crossover
 from source.population.individual import Individual
 import numpy as np
-from source.crossover.random_generator import RandomGenerator
 
 
 class DiscreteCrossover(Crossover):
@@ -19,9 +18,9 @@ class DiscreteCrossover(Crossover):
         while i > 0:
             individual1, individual2 = self.generate_individuals(population)
             chromosomes = self.generate_chromosome(individual1, individual2, chromosome_size, number_of_genes)
+            # Add new individual with passed chromosomes to population.
             self.create_new_individual(individual1, chromosomes, new_population)
             i -= 1
-
         return new_population[:self.crossover_size]
 
     def generate_chromosome(self, individual1: Individual, individual2: Individual, chromosome_size: int,
@@ -35,7 +34,7 @@ class DiscreteCrossover(Crossover):
             chromosomes.append(genes)
         return chromosomes
 
-    def generate_gene(self, individual1: Individual, individual2: Individual, chromosome: int, gene: int) -> list[int]:
+    def generate_gene(self, individual1: Individual, individual2: Individual, chromosome: int, gene: int) -> int:
         probability = np.random.rand()
         if probability <= self.crossover_probability:
             return individual1.chromosomes[chromosome][gene]
@@ -44,6 +43,6 @@ class DiscreteCrossover(Crossover):
 
     def create_new_individual(self, individual1: Individual, chromosomes: list[list[int]],
                               new_population: List[Individual]):
-        new_individual = individual1.copy()
-        new_individual.chromosomes = chromosomes
+        new_individual = individual1.copy()  # Copy only structure of individual, without chromosomes values
+        new_individual.chromosomes = np.array(chromosomes)
         new_population.append(new_individual)

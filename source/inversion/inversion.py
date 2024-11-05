@@ -1,8 +1,9 @@
 from source.population.individual import Individual
 import random
 
+
 class Inversion:
-    def __init__(self, inversion_probability : float = 0.2) -> None:
+    def __init__(self, inversion_probability: float = 0.2) -> None:
         self.inversion_probability = inversion_probability
 
     def inverse(self, individuals: list[Individual]) -> list[Individual]:
@@ -23,6 +24,6 @@ class Inversion:
                     if start > end:
                         start, end = end, start
 
-                    chromosome[start : end + 1] = chromosome[start : end + 1][::-1]
+                    chromosome[start: end + 1] = chromosome[start: end + 1][::-1]
 
         return individuals

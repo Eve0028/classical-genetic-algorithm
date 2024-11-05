@@ -11,7 +11,7 @@ class PointCrossover(Crossover):
     def __init__(self, intersection_number: int, crossover_size: int, crossover_probability=0.8):
         super().__init__(crossover_size, crossover_probability)
         self.intersection_number = intersection_number
-        self.crossover_size = crossover_size
+        # self.crossover_size = crossover_size
 
     def cross(self, population: List[Individual]) -> list[Individual]:
         new_population = []
