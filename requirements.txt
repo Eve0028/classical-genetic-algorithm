@@ -1,6 +1,8 @@
 scipy
 benchmark_functions
 optuna
+sqlalchemy
+optuna-dashboard
 pytest
 numpy
 matplotlib

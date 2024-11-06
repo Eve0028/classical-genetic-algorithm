@@ -1,6 +1,8 @@
 from source.population.individual import Individual
 from source.utils.binary_utils import BinaryUtils
 
+from source.config.logging_config import logger
+
 
 class Population:
     def __init__(self, population_size: int, number_of_chromosomes: int, precision: int,
@@ -16,12 +18,16 @@ class Population:
         :param generate: Whether to generate individuals upon initialization.
         """
         if population_size <= 0:
+            logger.error("population_size must be a positive integer.")
             raise ValueError("population_size must be a positive integer.")
         if number_of_chromosomes <= 0:
+            logger.error("number_of_chromosomes must be a positive integer.")
             raise ValueError("number_of_chromosomes must be a positive integer.")
         if precision <= 0:
+            logger.error("precision must be a positive integer.")
             raise ValueError("precision must be a positive integer.")
         if start_interval >= end_interval:
+            logger.error("start_interval must be less than end_interval.")
             raise ValueError("start_interval must be less than end_interval.")
 
         self.population_size = population_size

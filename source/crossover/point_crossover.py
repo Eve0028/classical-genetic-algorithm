@@ -15,13 +15,14 @@ class PointCrossover(Crossover):
     def cross(self, population: List[Individual]) -> list[Individual]:
         new_population = []
         chromosome_size = population[0].number_of_chromosomes
+        number_of_genes = population[0].number_of_genes
         i = self.crossover_size
         while i > 0:
             individual1, individual2 = self.generate_individuals(population)
             not_crossover = np.random.rand()
             if self.crossover_probability < not_crossover:
                 continue
-            intersection_points = self.generate_intersection_points(self.intersection_number, chromosome_size)
+            intersection_points = self.generate_intersection_points(self.intersection_number, number_of_genes)
             self.cross_individuals(individual1, individual2, chromosome_size, intersection_points)
             new_population.append(individual1)
             new_population.append(individual2)
@@ -30,12 +31,12 @@ class PointCrossover(Crossover):
         return new_population[:self.crossover_size]
 
 
-    def generate_intersection_points(self, intersection_number: int, chromosome_size: int) -> List[int]:
+    def generate_intersection_points(self, intersection_number: int, number_of_genes: int) -> List[int]:
         if intersection_number == 1:
-            intersection_points = RandomGenerator.generate_random_list(1, 1, chromosome_size)
-            intersection_points = intersection_points + [chromosome_size]
+            intersection_points = RandomGenerator.generate_random_list(1, 1, number_of_genes)
+            intersection_points = intersection_points + [number_of_genes]
         else:
-            intersection_points = RandomGenerator.generate_random_list(2, 1, chromosome_size)
+            intersection_points = RandomGenerator.generate_random_list(2, 1, number_of_genes)
             intersection_points = sorted(intersection_points)
         return intersection_points
 
