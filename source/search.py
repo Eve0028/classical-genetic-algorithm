@@ -6,12 +6,16 @@ from source.evolution.evolution import Evolution
 from source.evolution.functions import SimpleFunctionEnum
 from source.evolution.strategies import SelectionStrategyEnum, CrossoverStrategyEnum, MutationStrategyEnum
 from source.inversion.inversion import Inversion
-from source.config.params import SIMPLE_FUNCTION_NAMES, NUM_VARIABLES, PRECISIONS, SIMPLE_DB_FILE, DB_PREFIX
+from source.config.params import SIMPLE_FUNCTION_NAMES, NUM_VARIABLES, PRECISIONS, ACTUAL_DB_FILE_FULLNAME
 from source.population.population import Population
 from source.config.logging_config import logger
 
 
 def objective(trial, function_name, num_variables, precision):
+    trial.set_user_attr('function_name', function_name)
+    trial.set_user_attr('num_variables', num_variables)
+    trial.set_user_attr('precision', precision)
+
     population_size = trial.suggest_int('population_size', 100, 10000)
     num_generations = trial.suggest_int('num_generations', 100, 10000)
 
@@ -105,18 +109,43 @@ def objective(trial, function_name, num_variables, precision):
     return function(best_individual.decode_chromosomes_representation())
 
 
-database_url = f"{DB_PREFIX}{SIMPLE_DB_FILE}"
+database_url = ACTUAL_DB_FILE_FULLNAME
+
+
+def enqueue_running_and_failed_trials(study):
+    trials = study.get_trials(deepcopy=False)
+    # Set to store unique sample parameters
+    enqueued_params = set()
+
+    for trial in trials:
+        if trial.state in [optuna.trial.TrialState.RUNNING, optuna.trial.TrialState.FAIL]:
+            trial_params = tuple(trial.params.items())  # Replace the parameter dictionary with a tuple
+
+            # Check that the parameters have not already been added to the queue
+            if trial_params not in enqueued_params:
+                print(f"Enqueuing trial with parameters: {trial.params}")
+                study.enqueue_trial(trial.params)
+                enqueued_params.add(trial_params)
+
 
 for function_name in SIMPLE_FUNCTION_NAMES:
     for num_variable in NUM_VARIABLES:
         for precision in PRECISIONS:
             print(f"Optimizing {function_name} with {num_variable} variables and precision {precision}")
-            study = optuna.create_study(study_name=f'{function_name}__var_{num_variable}__prec_{precision}',
-                                        direction='minimize', storage=database_url,
-                                        load_if_exists=True)
+
+            study = optuna.create_study(
+                study_name=f'{function_name}__var_{num_variable}__prec_{precision}',
+                direction='minimize',
+                storage=database_url,
+                load_if_exists=True
+            )
+
+            enqueue_running_and_failed_trials(study)
+
             partial_objective = partial(objective, function_name=function_name, num_variables=num_variable,
                                         precision=precision)
             study.optimize(partial_objective, n_trials=30)
+
             print(
                 f"Best parameters for {function_name}, num variables {num_variable}, precision {precision}: {study.best_params}")
             best_trial = study.best_trial
@@ -125,4 +154,5 @@ for function_name in SIMPLE_FUNCTION_NAMES:
                 print(f'Chromosome {i}:', best_trial.user_attrs[f'best_individual_chromosome_{i}_value'])
             print(f'Computation time:', best_trial.user_attrs['computation_time'])
 
+# cd source
 # optuna-dashboard sqlite:///simple_functions.db
