@@ -7,6 +7,7 @@ from source.mutation.mutation import Mutation
 from source.inversion.inversion import Inversion
 from source.selection.elite_strategy import apply_elite_strategy
 from source.selection.selection_strategy import SelectionStrategy
+from source.config.logging_config import logger
 
 
 class Evolution:
@@ -33,6 +34,7 @@ class Evolution:
         self.individuals = individuals
         self.population_size = len(self.individuals)
         if not (0 <= elitism_size <= self.population_size):
+            logger.error("elitism_size must be between 0 and the population size")
             raise ValueError("elitism_size must be between 0 and the population size")
         self.number_of_generations = number_of_generations
         self.fitness_function = fitness_function
@@ -62,6 +64,7 @@ class Evolution:
         """
         Evolves the population for the given number of generations.
         """
+        after_selection_more_than_population_size = False
         for _ in range(self.number_of_generations):
             self.evaluate_fitness()
 
@@ -70,12 +73,15 @@ class Evolution:
 
             self.select()
             # selection size should be checked when creating the selection strategy
-            if len(self.individuals) + self.elitism_size > self.population_size:
-                raise ValueError("The selection strategy returned more individuals than the population size.")
+            if (len(self.individuals) + self.elitism_size) > self.population_size:
+                if not after_selection_more_than_population_size:
+                    logger.warning("The selection strategy returned more individuals than the population size.")
+                    after_selection_more_than_population_size = True
 
             self.crossover()
             # crossover size should be checked when creating the crossover strategy
-            if len(self.individuals) + self.elitism_size > self.population_size:
+            if (len(self.individuals) + self.elitism_size) > self.population_size:
+                logger.error("The crossover strategy returned more individuals than the population size.")
                 raise ValueError("The crossover strategy returned more individuals than the population size.")
 
             self.mutation()
@@ -86,4 +92,5 @@ class Evolution:
                 self.individuals.extend(self.elite)
 
             if len(self.individuals) != self.population_size:
+                logger.error("The population size changed during evolution.")
                 raise ValueError("The population size changed during evolution.")

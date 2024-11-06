@@ -1,8 +1,10 @@
 import random
-from typing import List, Callable
+from typing import List
 
 from source.selection.selection_strategy import SelectionStrategy
 from source.population.individual import Individual
+
+from source.config.logging_config import logger
 
 
 class TournamentSelection(SelectionStrategy):
@@ -22,6 +24,7 @@ class TournamentSelection(SelectionStrategy):
         :raises ValueError: If tournament_size is greater than the number of individuals.
         """
         if self.tournament_size > len(individuals):
+            logger.error("Tournament size cannot be greater than the number of individuals.")
             raise ValueError("Tournament size cannot be greater than the number of individuals.")
 
         selected_individuals = []

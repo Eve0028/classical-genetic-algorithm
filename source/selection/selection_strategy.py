@@ -2,6 +2,7 @@ from abc import ABC
 from typing import List
 
 from source.population.individual import Individual
+from source.config.logging_config import logger
 
 
 class SelectionStrategy(ABC):
@@ -20,10 +21,12 @@ class SelectionStrategy(ABC):
         # Calculate the selection size based on the provided parameters.
         # If both selection_size and selection_percentage are provided, selection_size is used.
         if selection_size is None and selection_percentage is None:
+            logger.error("Either selection_size or selection_percentage must be provided.")
             raise ValueError("Either selection_size or selection_percentage must be provided.")
 
         if selection_size is not None:
             if selection_size > len(individuals):
+                logger.error("Selection size cannot be greater than the number of individuals.")
                 raise ValueError("Selection size cannot be greater than the number of individuals.")
             return selection_size
 

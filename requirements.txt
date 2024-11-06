@@ -1,3 +1,5 @@
 scipy
 benchmark_functions
 optuna
+sqlalchemy
+optuna-dashboard
