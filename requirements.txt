@@ -1,3 +1,7 @@
 scipy
 benchmark_functions
 optuna
+pytest
+numpy
+matplotlib
+datetime

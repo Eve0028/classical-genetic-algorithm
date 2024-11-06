@@ -1,6 +1,7 @@
 from source.evolution.evolution import Evolution
 from source.evolution.functions import SimpleFunctionEnum
 from source.evolution.strategies import SelectionStrategyEnum, CrossoverStrategyEnum, MutationStrategyEnum
+from source.graph.graph import GraphCreator
 from source.inversion.inversion import Inversion
 from source.population.population import Population
 
@@ -64,7 +65,9 @@ evolution = Evolution(
     inversion=inversion,
     elitism_size=elite_size
 )
-evolution.evolve()
+fitness_values = evolution.evolve()
+graph_creator = GraphCreator()
+graph_creator.create_graphs(fitness_values, search_minimum)
 
 best_ind = min(evolution.individuals, key=lambda x: function(x.decode_chromosomes_representation()))
 print(function(best_ind.decode_chromosomes_representation()))
