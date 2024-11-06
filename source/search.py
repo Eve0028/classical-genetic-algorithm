@@ -132,8 +132,12 @@ def objective(trial: optuna.trial.Trial, function: callable, num_variables: int,
     trial.set_user_attr('avg_computation_time', avg_computation_time)
 
     avg_fitness_value = np.mean(fitness_values)
+    min_fitness_value = np.min(fitness_values)
+    max_fitness_value = np.max(fitness_values)
     logger.info(f"Average fitness: {avg_fitness_value}\n")
     trial.set_user_attr('avg_fitness', avg_fitness_value)
+    trial.set_user_attr('min_fitness', min_fitness_value)
+    trial.set_user_attr('max_fitness', max_fitness_value)
 
     # Normalise two targets
     norm_result = avg_fitness_value / (0.1 ** precision)
