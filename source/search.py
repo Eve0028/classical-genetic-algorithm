@@ -1,25 +1,27 @@
 import optuna
-import benchmark_functions as bf
+import time
+from functools import partial
 
 from source.evolution.evolution import Evolution
+from source.evolution.functions import SimpleFunctionEnum
 from source.evolution.strategies import SelectionStrategyEnum, CrossoverStrategyEnum, MutationStrategyEnum
 from source.inversion.inversion import Inversion
+from source.config.params import SIMPLE_FUNCTION_NAMES, NUM_VARIABLES, PRECISIONS, SIMPLE_DB_FILE, DB_PREFIX
 from source.population.population import Population
+from source.config.logging_config import logger
 
 
-def objective(trial):
-    population_size = trial.suggest_int('population_size', 10, 1000)
-    num_generations = trial.suggest_int('num_generations', 10, 1000)
+def objective(trial, function_name, num_variables, precision):
+    population_size = trial.suggest_int('population_size', 100, 10000)
+    num_generations = trial.suggest_int('num_generations', 100, 10000)
 
-    num_variables = trial.suggest_int('num_variables', 2, 2)
-    function = bf.Hypersphere(num_variables)
+    function = SimpleFunctionEnum[function_name].value[0](num_variables)
+    start_interval = SimpleFunctionEnum[function_name].value[1]
+    end_interval = SimpleFunctionEnum[function_name].value[2]
     search_minimum = True
-    precision = trial.suggest_int('precision', 2, 5)
-    start_interval = -5
-    end_interval = 5
 
     selection_strategy_type = trial.suggest_categorical('selection_strategy', ['ROULETTE', 'TOURNAMENT', 'BEST'])
-    selection_size = trial.suggest_int('selection_size', 2,
+    selection_size = trial.suggest_int('selection_size', 10,
                                        population_size) if selection_strategy_type != 'TOURNAMENT' else None
     tournament_size = trial.suggest_int('tournament_size', 2,
                                         population_size // 2) if selection_strategy_type == 'TOURNAMENT' else None
@@ -27,18 +29,19 @@ def objective(trial):
         selection_size if selection_size else tournament_size)
 
     elite_strategy = trial.suggest_categorical('elite_strategy', [True, False])
-    elite_size = trial.suggest_int('elite_size', 1, population_size // 2) if elite_strategy else 0
+    elite_size = trial.suggest_int('elite_size', 1, 10) if elite_strategy else 0
 
     crossover_strategy_type = trial.suggest_categorical('crossover_strategy', ['POINT', 'DISCRETE', 'UNIFORM'])
-    crossover_probability = trial.suggest_float('crossover_probability', 0.1, 1.0)
-    intersection_number = trial.suggest_int('intersection_number', 1, 2) if crossover_strategy_type in ['POINT'] else None
+    crossover_probability = trial.suggest_float('crossover_probability', 0.5, 1.0)
+    intersection_number = trial.suggest_int('intersection_number', 1, 2) if crossover_strategy_type in [
+        'POINT'] else None
     crossover_size = population_size - elite_size
     if crossover_strategy_type == 'POINT':
         crossover_strategy = CrossoverStrategyEnum[crossover_strategy_type].value(intersection_number, crossover_size,
-                                                                            crossover_probability)
+                                                                                  crossover_probability)
     else:
         crossover_strategy = CrossoverStrategyEnum[crossover_strategy_type].value(crossover_size,
-                                                                            crossover_probability)
+                                                                                  crossover_probability)
 
     mutation_strategy_type = trial.suggest_categorical('mutation_strategy', ['ONE_POINT', 'TWO_POINT', 'BOUNDARY'])
     mutation_probability = trial.suggest_float('mutation_probability', 0.01, 0.5)
@@ -54,6 +57,25 @@ def objective(trial):
                             start_interval=start_interval, end_interval=end_interval,
                             generate=True)
 
+    logger.info(f"Evolution initialized with the following parameters:\n"
+                f"function_name: {function_name}\n"
+                f"num_variables: {num_variables}\n"
+                f"precision: {precision}\n"
+                f"population_size: {population_size}\n"
+                f"number_of_generations: {num_generations}\n"
+                f"selection_strategy: {selection_strategy_type}\n"
+                f"selection_size: {selection_size}\n"
+                f"tournament_size: {tournament_size}\n"
+                f"elite_strategy: {elite_strategy}\n"
+                f"elite_size: {elite_size}\n"
+                f"crossover_strategy: {crossover_strategy_type}\n"
+                f"crossover_probability: {crossover_probability}\n"
+                f"intersection_number: {intersection_number}\n"
+                f"mutation_strategy: {mutation_strategy_type}\n"
+                f"mutation_probability: {mutation_probability}\n"
+                f"inversion: {is_inversion}\n"
+                f"inversion_probability: {inversion_probability if is_inversion else "None"}\n")
+
     evolution = Evolution(
         individuals=population.individuals,
         number_of_generations=num_generations,
@@ -65,13 +87,42 @@ def objective(trial):
         inversion=inversion,
         elitism_size=elite_size
     )
+    start_time = time.time()
     evolution.evolve()
+    end_time = time.time()
+    computation_time = end_time - start_time
+    logger.info(f"Computation time: {computation_time}")
+    trial.set_user_attr('computation_time', computation_time)
 
-    best_individual = min(evolution.individuals, key=lambda x: function(x))
-    return function(best_individual)
+    best_individual = min(evolution.individuals, key=lambda x: function(x.decode_chromosomes_representation()))
+    logger.info(f"Chromosomes: {best_individual.chromosomes}")
+
+    chromosomes_repr = best_individual.decode_chromosomes_representation()
+    logger.info(f"Chromosomes representation values: {chromosomes_repr}")
+    for i, chromosome in enumerate(best_individual.chromosomes):
+        trial.set_user_attr(f'best_individual_chromosome_{i}_value', chromosomes_repr[i])
+
+    return function(best_individual.decode_chromosomes_representation())
 
 
-study = optuna.create_study(direction='minimize')
-study.optimize(objective, n_trials=100)
+database_url = f"{DB_PREFIX}{SIMPLE_DB_FILE}"
 
-print("Best parameters: ", study.best_params)
+for function_name in SIMPLE_FUNCTION_NAMES:
+    for num_variable in NUM_VARIABLES:
+        for precision in PRECISIONS:
+            print(f"Optimizing {function_name} with {num_variable} variables and precision {precision}")
+            study = optuna.create_study(study_name=f'{function_name}__var_{num_variable}__prec_{precision}',
+                                        direction='minimize', storage=database_url,
+                                        load_if_exists=True)
+            partial_objective = partial(objective, function_name=function_name, num_variables=num_variable,
+                                        precision=precision)
+            study.optimize(partial_objective, n_trials=30)
+            print(
+                f"Best parameters for {function_name}, num variables {num_variable}, precision {precision}: {study.best_params}")
+            best_trial = study.best_trial
+            print('Best individual: ')
+            for i in range(num_variable):
+                print(f'Chromosome {i}:', best_trial.user_attrs[f'best_individual_chromosome_{i}_value'])
+            print(f'Computation time:', best_trial.user_attrs['computation_time'])
+
+# optuna-dashboard sqlite:///simple_functions.db

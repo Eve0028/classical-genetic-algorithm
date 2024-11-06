@@ -22,7 +22,7 @@ selection_strategy = SelectionStrategyEnum[selection_strategy_type].value(
     selection_size if selection_size else tournament_size)
 
 # elite_strategy = True
-elite_size = 0
+elite_size = 3
 
 crossover_strategy_type = 'UNIFORM'
 crossover_probability = 0.8
