@@ -1,5 +1,7 @@
 scipy
+setuptools
 benchmark_functions
+opfunu
 optuna
 sqlalchemy
 optuna-dashboard

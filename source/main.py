@@ -6,6 +6,7 @@ from source.inversion.inversion import Inversion
 from source.population.population import Population
 import time
 
+
 def start_algorithm() -> None:
     config = app.get_algorithm_config()
     population_size = config['population_size']
