@@ -218,23 +218,24 @@ def run_study(database_url: str, function: callable, function_name: str, num_var
 
 
 def main() -> None:
-    database_url = f'{DB_PREFIX}{SIMPLE_DB_FILE}'
-    for function_name in SIMPLE_FUNCTION_NAMES:
-        start_interval = SimpleFunctionEnum[function_name].value[1]
-        end_interval = SimpleFunctionEnum[function_name].value[2]
-        for num_variable in NUM_VARIABLES:
-            function = SimpleFunctionEnum[function_name].value[0](num_variable)
-            for precision in PRECISIONS:
-                run_study(database_url, function, function_name, num_variable, precision, start_interval, end_interval)
-
-    # database_url = f'{DB_PREFIX}{COMPLEX_DB_FILE}'
-    # for function_name in COMPLEX_FUNCTION_NAMES:
-    #     start_interval = ComplexFunctionEnum[function_name].value[1]
-    #     end_interval = ComplexFunctionEnum[function_name].value[2]
-    #     for num_variable in ComplexFunctionEnum[function_name].value[3]:
-    #         function = ComplexFunctionEnum[function_name].value[0](num_variable)
+    # database_url = f'{DB_PREFIX}{SIMPLE_DB_FILE}'
+    # for function_name in SIMPLE_FUNCTION_NAMES:
+    #     start_interval = SimpleFunctionEnum[function_name].value[1]
+    #     end_interval = SimpleFunctionEnum[function_name].value[2]
+    #     for num_variable in NUM_VARIABLES:
+    #         function = SimpleFunctionEnum[function_name].value[0](num_variable)
     #         for precision in PRECISIONS:
     #             run_study(database_url, function, function_name, num_variable, precision, start_interval, end_interval)
+
+    database_url = f'{DB_PREFIX}{COMPLEX_DB_FILE}'
+    for function_name in COMPLEX_FUNCTION_NAMES:
+        start_interval = ComplexFunctionEnum[function_name].value[1]
+        end_interval = ComplexFunctionEnum[function_name].value[2]
+        for num_variable in ComplexFunctionEnum[function_name].value[3]:
+            function = ComplexFunctionEnum[function_name].value[0](num_variable)
+            function = function.evaluate
+            for precision in PRECISIONS:
+                run_study(database_url, function, function_name, num_variable, precision, start_interval, end_interval)
 
 
 if __name__ == '__main__':
