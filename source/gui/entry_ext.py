@@ -1,25 +1,15 @@
 from tkinter import *
 from source.gui.common import *
+from tkinter import ttk
 
-class EntryExt(Entry):
-    def __init__(self, master : Misc, text : str, entry_type : type = int) -> None:
-        super().__init__(master,
-                         bd=0,
-                         relief="flat",
-                         font=FONT(ENTRY_FONT_SIZE))
+class EntryExt(ttk.Entry):
+    def __init__(self, master: Misc, text: str, row: int, entry_type: type = int) -> None:
+        super().__init__(master)
         self.__type = entry_type
-        self.configure({
-            "background": FG_COLOR,
-            "foreground": BLACK,
-            "highlightbackground": HL_BG_COLOR,
-            "highlightthickness": "2",
-            "highlightcolor": HL_COLOR,
-        })
         self.insert(0, text)
         self.modified = False
         self.bind("<Key>", self.__first_time_entry)
-        self.pack(padx=ENTRY_PADX, pady=ENTRY_PADY, ipady=ENTRY_IPADY)
-        self.configure(width=ENTRY_WIDTH)
+        self.grid(row=row, column=1, padx=ENTRY_PADX, pady=ENTRY_PADY, ipady=2, sticky="e")
 
     def __first_time_entry(self, event : Event) -> None:
         if event.keysym == "Tab":
