@@ -26,6 +26,7 @@ def get_configuration() -> Evolution:
         function = SimpleFunctionEnum[function_name].value[0](num_variables)
     else:
         function = ComplexFunctionEnum[function_name].value[0](num_variables)
+        function = function.evaluate
 
     selection_strategy_type = config['selection_strategy']
     selection_size = config['individuals_best'] if selection_strategy_type != 'TOURNAMENT' else None
