@@ -156,6 +156,8 @@ def objective(trial: optuna.trial.Trial, function: callable, num_variables: int,
     weight_time = 1.0
     combined_score = weight_result * norm_result + weight_time * norm_time
 
+    # return combined_score
+    return float(avg_fitness_value)
 
 
 def enqueue_running_and_failed_trials(study: optuna.study.Study) -> None:
@@ -212,7 +214,7 @@ def run_study(database_url: str, function: callable, function_name: str, num_var
     print(
         f"Best parameters for {function_name}, num variables {num_variable}, precision {precision}: {study.best_params}")
     best_trial = study.best_trial
-    print(f'Computation time:', best_trial.user_attrs['computation_time'])
+    print(f'Computation time:', best_trial.user_attrs['avg_computation_time'])
 
 
 def main() -> None:
