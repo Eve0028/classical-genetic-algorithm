@@ -3,6 +3,7 @@ import optuna
 from optuna.pruners import MedianPruner
 import time
 from functools import partial
+# import torch
 
 from source.evolution.evolution import Evolution
 from source.evolution.functions import SimpleFunctionEnum, ComplexFunctionEnum
@@ -15,7 +16,7 @@ from source.config.logging_config import logger
 
 
 def objective(trial: optuna.trial.Trial, function: callable, num_variables: int, start_interval: float,
-              end_interval: float, search_minimum: bool, precision: int, num_evolutions: int = 10) -> float:
+              end_interval: float, search_minimum: bool, precision: int, num_evolutions: int = 6) -> float:
     """
     Objective function for Optuna study.
 
@@ -131,7 +132,7 @@ def objective(trial: optuna.trial.Trial, function: callable, num_variables: int,
         trial.set_user_attr(f'fitness_val_{i}', fitness_val)
 
         avg_fitness = sum(fitness_values) / len(fitness_values)
-        if i >= 3:
+        if i >= 2:
             trial.report(avg_fitness, i)
             if trial.should_prune():
                 raise optuna.TrialPruned()
@@ -155,7 +156,6 @@ def objective(trial: optuna.trial.Trial, function: callable, num_variables: int,
     weight_time = 1.0
     combined_score = weight_result * norm_result + weight_time * norm_time
 
-    return combined_score
 
 
 def enqueue_running_and_failed_trials(study: optuna.study.Study) -> None:
@@ -225,14 +225,14 @@ def main() -> None:
             for precision in PRECISIONS:
                 run_study(database_url, function, function_name, num_variable, precision, start_interval, end_interval)
 
-    database_url = f'{DB_PREFIX}{COMPLEX_DB_FILE}'
-    for function_name in COMPLEX_FUNCTION_NAMES:
-        start_interval = ComplexFunctionEnum[function_name].value[1]
-        end_interval = ComplexFunctionEnum[function_name].value[2]
-        for num_variable in ComplexFunctionEnum[function_name].value[3]:
-            function = ComplexFunctionEnum[function_name].value[0](num_variable)
-            for precision in PRECISIONS:
-                run_study(database_url, function, function_name, num_variable, precision, start_interval, end_interval)
+    # database_url = f'{DB_PREFIX}{COMPLEX_DB_FILE}'
+    # for function_name in COMPLEX_FUNCTION_NAMES:
+    #     start_interval = ComplexFunctionEnum[function_name].value[1]
+    #     end_interval = ComplexFunctionEnum[function_name].value[2]
+    #     for num_variable in ComplexFunctionEnum[function_name].value[3]:
+    #         function = ComplexFunctionEnum[function_name].value[0](num_variable)
+    #         for precision in PRECISIONS:
+    #             run_study(database_url, function, function_name, num_variable, precision, start_interval, end_interval)
 
 
 if __name__ == '__main__':
