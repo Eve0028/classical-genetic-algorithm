@@ -240,6 +240,6 @@ def main() -> None:
 if __name__ == '__main__':
     main()
 
-# cd source
+# cd db
 # optuna-dashboard sqlite:///simple_functions.db
 # optuna-dashboard sqlite:///complex_functions.db
