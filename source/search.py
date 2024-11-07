@@ -1,5 +1,6 @@
 import numpy as np
 import optuna
+from optuna.pruners import MedianPruner
 import time
 from functools import partial
 
@@ -38,12 +39,12 @@ def objective(trial: optuna.trial.Trial, function: callable, num_variables: int,
     selection_size = trial.suggest_int('selection_size', 10,
                                        population_size) if selection_strategy_type != 'TOURNAMENT' else None
     tournament_size = trial.suggest_int('tournament_size', 2,
-                                        population_size // 2) if selection_strategy_type == 'TOURNAMENT' else None
+                                        population_size // 5) if selection_strategy_type == 'TOURNAMENT' else None
     selection_strategy = SelectionStrategyEnum[selection_strategy_type].value(
         selection_size if selection_size else tournament_size)
 
     elite_strategy = trial.suggest_categorical('elite_strategy', [True, False])
-    elite_size = trial.suggest_int('elite_size', 1, 10) if elite_strategy else 0
+    elite_size = trial.suggest_int('elite_size', 1, population_size // 5) if elite_strategy else 0
 
     crossover_strategy_type = trial.suggest_categorical('crossover_strategy', ['POINT', 'DISCRETE', 'UNIFORM'])
     crossover_probability = trial.suggest_float('crossover_probability', 0.5, 1.0)
@@ -125,7 +126,15 @@ def objective(trial: optuna.trial.Trial, function: callable, num_variables: int,
         for idx, chromosome in enumerate(best_individual.chromosomes):
             trial.set_user_attr(f'best_individual_chromosome_{idx}_value__ev_{i}', best_chromosomes_repr[idx])
 
-        fitness_values.append(function(best_individual.decode_chromosomes_representation()))
+        fitness_val = function(best_individual.decode_chromosomes_representation())
+        fitness_values.append(fitness_val)
+        trial.set_user_attr(f'fitness_val_{i}', fitness_val)
+
+        avg_fitness = sum(fitness_values) / len(fitness_values)
+        if i >= 3:
+            trial.report(avg_fitness, i)
+            if trial.should_prune():
+                raise optuna.TrialPruned()
 
     avg_computation_time = np.mean(computation_times)
     logger.info(f"Average computation time: {avg_computation_time}")
@@ -183,15 +192,17 @@ def run_study(database_url: str, function: callable, function_name: str, num_var
     :param start_interval: Start of the interval for variable values.
     :param end_interval: End of the interval for variable values.
     """
+    pruner = MedianPruner(n_startup_trials=5, n_warmup_steps=3, interval_steps=1)
     study = optuna.create_study(
         study_name=f'{function_name}__var_{num_variable}__prec_{precision}',
         direction='minimize',
         storage=database_url,
-        load_if_exists=True
+        load_if_exists=True,
+        pruner=pruner
     )
 
     print(f"Optimizing {function_name} with {num_variable} variables and precision {precision}")
-    enqueue_running_and_failed_trials(study)
+    # enqueue_running_and_failed_trials(study)
 
     partial_objective = partial(objective, function=function, num_variables=num_variable,
                                 start_interval=start_interval, end_interval=end_interval,
@@ -201,9 +212,6 @@ def run_study(database_url: str, function: callable, function_name: str, num_var
     print(
         f"Best parameters for {function_name}, num variables {num_variable}, precision {precision}: {study.best_params}")
     best_trial = study.best_trial
-    # print('Best individual: ')
-    # for i in range(num_variable):
-    #     print(f'Chromosome {i}:', best_trial.user_attrs[f'best_individual_chromosome_{i}_value'])
     print(f'Computation time:', best_trial.user_attrs['computation_time'])
 
 
