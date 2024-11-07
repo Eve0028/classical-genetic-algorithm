@@ -2,6 +2,7 @@ from source.evolution.evolution import Evolution
 from source.evolution.functions import SimpleFunctionEnum
 from source.evolution.strategies import SelectionStrategyEnum, CrossoverStrategyEnum, MutationStrategyEnum
 from source.gui.application import Application
+from source.graph.graph import GraphCreator
 from source.inversion.inversion import Inversion
 from source.population.population import Population
 import time
@@ -70,8 +71,10 @@ def start_algorithm() -> None:
         elitism_size=elite_size
     )
     start = time.time()
-    evolution.evolve()
+    fitness_values = evolution.evolve()
     end = time.time()
+    graph_creator = GraphCreator()
+    graph_creator.create_graphs(fitness_values, search_minimum)
 
     best_ind = min(evolution.individuals, key=lambda x: function(x.decode_chromosomes_representation()))
 

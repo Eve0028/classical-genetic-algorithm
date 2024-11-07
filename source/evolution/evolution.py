@@ -1,6 +1,9 @@
 from collections.abc import Callable
 from typing import List
 
+from numpy import ndarray
+import numpy as np
+
 from source.population.individual import Individual
 from source.crossover.crossover import Crossover
 from source.mutation.mutation import Mutation
@@ -8,7 +11,6 @@ from source.inversion.inversion import Inversion
 from source.selection.elite_strategy import apply_elite_strategy
 from source.selection.selection_strategy import SelectionStrategy
 from source.config.logging_config import logger
-
 
 class Evolution:
     def __init__(self, individuals: List[Individual], number_of_generations: int,
@@ -46,10 +48,13 @@ class Evolution:
         self.elitism_size = elitism_size
         self.elite = None
 
-    def evaluate_fitness(self) -> None:
+    def evaluate_fitness(self) -> ndarray:
+        fitness_values = np.empty(0)
         for individual in self.individuals:
             fitness_value = self.fitness_function(individual.decode_chromosomes_representation())
             individual.fitness = 1 / fitness_value if self.search_minimum else fitness_value
+            fitness_values = np.append(fitness_values,  fitness_value)
+        return fitness_values
 
     def select(self) -> None:
         self.individuals = self.selection_strategy.select(self.individuals)
@@ -60,13 +65,15 @@ class Evolution:
     def mutation(self) -> None:
         self.individuals = self.mutation_strategy.mutate(self.individuals)
 
-    def evolve(self) -> None:
+    def evolve(self) -> ndarray:
         """
         Evolves the population for the given number of generations.
         """
         after_selection_more_than_population_size = False
+        fitness_values = np.empty((self.number_of_generations, self.population_size))
         for _ in range(self.number_of_generations):
-            self.evaluate_fitness()
+            generation_fitness_values = self.evaluate_fitness()
+            fitness_values[_] = generation_fitness_values.reshape(1,-1)
 
             if self.elitism_size:
                 self.elite = apply_elite_strategy(self.individuals, self.elitism_size)
@@ -94,3 +101,5 @@ class Evolution:
             if len(self.individuals) != self.population_size:
                 logger.error("The population size changed during evolution.")
                 raise ValueError("The population size changed during evolution.")
+
+        return fitness_values

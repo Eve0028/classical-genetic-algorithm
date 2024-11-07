@@ -5,3 +5,7 @@ opfunu
 optuna
 sqlalchemy
 optuna-dashboard
+pytest
+numpy
+matplotlib
+datetime
