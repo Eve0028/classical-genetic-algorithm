@@ -1,6 +1,5 @@
 from typing import List
 
-from source.selection.elite_strategy import apply_elite_strategy
 from source.selection.selection_strategy import SelectionStrategy
 from source.population.individual import Individual
 
@@ -21,4 +20,5 @@ class BestSelection(SelectionStrategy):
         :param individuals: List of individuals in the population.
         :return: List of top individuals.
         """
-        return apply_elite_strategy(individuals, self.selection_size)
+        sorted_individuals = sorted(individuals, key=lambda ind: ind.fitness, reverse=True)
+        return sorted_individuals[:self.selection_size]
