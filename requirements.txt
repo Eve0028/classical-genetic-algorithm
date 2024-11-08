@@ -9,3 +9,5 @@ pytest
 numpy
 matplotlib
 datetime
+hydra-core
+omegaconf
