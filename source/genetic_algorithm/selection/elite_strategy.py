@@ -1,6 +1,6 @@
 import copy
 
-from source.population.individual import Individual
+from source.genetic_algorithm.population.individual import Individual
 
 
 def apply_elite_strategy(individuals: list[Individual], elite_size: int) -> list[Individual]:

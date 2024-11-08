@@ -1,8 +1,8 @@
 import random
 import bisect
 
-from source.selection.selection_strategy import SelectionStrategy
-from source.population.individual import Individual
+from source.genetic_algorithm.selection.selection_strategy import SelectionStrategy
+from source.genetic_algorithm.population.individual import Individual
 
 
 class RouletteSelection(SelectionStrategy):

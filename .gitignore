@@ -1,5 +1,9 @@
 *.db
 *.log
+source/generated_data/*
+generated_data/*
+.hydra
+multirun
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
@@ -59,7 +63,6 @@ cover/
 *.pot
 
 # Django stuff:
-*.log
 local_settings.py
 db.sqlite3
 db.sqlite3-journal

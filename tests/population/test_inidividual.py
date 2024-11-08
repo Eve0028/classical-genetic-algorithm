@@ -1,7 +1,6 @@
-import pytest
 import numpy as np
 
-from source.population.individual import Individual
+from source.genetic_algorithm.population.individual import Individual
 
 
 def test_decode_chromosome_representation():

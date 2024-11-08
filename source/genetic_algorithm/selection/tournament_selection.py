@@ -1,10 +1,11 @@
 import random
 from typing import List
 
-from source.selection.selection_strategy import SelectionStrategy
-from source.population.individual import Individual
+from source.genetic_algorithm.selection.selection_strategy import SelectionStrategy
+from source.genetic_algorithm.population.individual import Individual
+from source.config.logging_config import get_logger
 
-from source.config.logging_config import logger
+logger = get_logger()
 
 
 class TournamentSelection(SelectionStrategy):

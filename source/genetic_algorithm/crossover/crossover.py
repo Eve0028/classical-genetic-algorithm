@@ -1,8 +1,8 @@
 import copy
 from typing import List
 
-from source.crossover.random_generator import RandomGenerator
-from source.population.individual import Individual
+from source.genetic_algorithm.crossover.random_generator import RandomGenerator
+from source.genetic_algorithm.population.individual import Individual
 from abc import ABC, abstractmethod
 
 

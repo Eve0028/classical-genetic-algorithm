@@ -6,6 +6,16 @@ Implementation of the classical genetic algorithm
 pip3 install -r requirements.txt
 ```
 
+### Run the genetic algorithm GUI
+`python main.py`
+
+### Run hyperparameter search
+Choose the function which hyperparameters you want to search and define the search space in the `source/config/functions/[function].yaml` file (or add your own function). 
+Then run the following command:<br>
+`python search.py functions=[function]`<br>
+Or run for multiple functions at once:<br>
+`python search.py -m functions=[function1],[function2],...`
+
 ### Used benchmarks
 - https://gitlab.com/luca.baronti/python_benchmark_functions
 - https://github.com/thieu1995/opfunu/tree/master <br>

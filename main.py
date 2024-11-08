@@ -1,14 +1,17 @@
-from source.evolution.evolution import Evolution
-from source.evolution.functions import SimpleFunctionEnum, ComplexFunctionEnum
-from source.evolution.strategies import SelectionStrategyEnum, CrossoverStrategyEnum, MutationStrategyEnum
+from source.config.logging_config import setup_logging
+from source.genetic_algorithm.evolution.evolution import Evolution
+from source.genetic_algorithm.evolution.functions import SimpleFunctionEnum, ComplexFunctionEnum
+from source.genetic_algorithm.evolution.strategies import SelectionStrategyEnum, CrossoverStrategyEnum, MutationStrategyEnum
 from source.gui.application import Application
 from source.graph.graph import GraphCreator
-from source.inversion.inversion import Inversion
-from source.population.population import Population
+from source.genetic_algorithm.inversion.inversion import Inversion
+from source.genetic_algorithm.population.population import Population
 from typing import Tuple
 import numpy as np
 import time
 from threading import Thread
+
+logger = setup_logging()
 
 
 def get_configuration() -> Evolution:
@@ -23,9 +26,9 @@ def get_configuration() -> Evolution:
 
     function_name = config['function_name']
     if function_name == 'ROSENBROCK':
-        function = SimpleFunctionEnum[function_name].value[0](num_variables)
+        function = SimpleFunctionEnum[function_name].value(num_variables)
     else:
-        function = ComplexFunctionEnum[function_name].value[0](num_variables)
+        function = ComplexFunctionEnum[function_name].value(num_variables)
         function = function.evaluate
 
     selection_strategy_type = config['selection_strategy']

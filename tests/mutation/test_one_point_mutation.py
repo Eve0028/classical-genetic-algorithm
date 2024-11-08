@@ -1,13 +1,15 @@
 import numpy as np
 
-from source.mutation.one_point_mutation import OnePointMutation
-from source.population.individual import Individual
+from source.genetic_algorithm.mutation.one_point_mutation import OnePointMutation
+from source.genetic_algorithm.population.individual import Individual
 
-def get_starting_population(chromosomes : int, genes : int) -> list[Individual]:
+
+def get_starting_population(chromosomes: int, genes: int) -> list[Individual]:
     individuals = [Individual(chromosomes, genes, 0, 1) for _ in range(10)]
     for i in individuals:
-        i.chromosomes = np.zeros((chromosomes,genes), dtype=int)
+        i.chromosomes = np.zeros((chromosomes, genes), dtype=int)
     return individuals
+
 
 def test_one_point_mutation_one_chromosome_max_probability():
     individuals = get_starting_population(1, 10)
@@ -21,6 +23,7 @@ def test_one_point_mutation_one_chromosome_max_probability():
             count += 1
 
     assert count == len(individuals)
+
 
 def test_best_selection_multiple_chromosomes_max_probability():
     individuals = get_starting_population(3, 10)

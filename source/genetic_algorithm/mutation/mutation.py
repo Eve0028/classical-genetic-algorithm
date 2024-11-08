@@ -1,5 +1,5 @@
 from abc import abstractmethod
-from source.population.individual import Individual
+from source.genetic_algorithm.population.individual import Individual
 
 class Mutation:
     def __init__(self, mutation_probability : float = 0.2) -> None:

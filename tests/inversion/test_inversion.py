@@ -1,7 +1,7 @@
 import numpy as np
 
-from source.inversion.inversion import Inversion
-from source.population.individual import Individual
+from source.genetic_algorithm.inversion.inversion import Inversion
+from source.genetic_algorithm.population.individual import Individual
 
 def get_starting_population(chromosomes : int, genes : int) -> list[Individual]:
     individuals = [Individual(chromosomes, genes, 0, 1, True) for _ in range(10)]
