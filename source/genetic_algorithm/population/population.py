@@ -1,7 +1,10 @@
-from source.population.individual import Individual
-from source.utils.binary_utils import BinaryUtils
+import logging
 
-from source.config.logging_config import logger
+from source.genetic_algorithm.population.individual import Individual
+from source.utils.binary_utils import BinaryUtils
+from source.config.logging_config import get_logger
+
+logger = get_logger()
 
 
 class Population:

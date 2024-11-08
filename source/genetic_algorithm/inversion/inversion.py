@@ -1,4 +1,4 @@
-from source.population.individual import Individual
+from source.genetic_algorithm.population.individual import Individual
 import random
 
 

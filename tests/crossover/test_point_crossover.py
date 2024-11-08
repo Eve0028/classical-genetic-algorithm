@@ -1,6 +1,6 @@
-from source.population.individual import Individual
+from source.genetic_algorithm.population.individual import Individual
 import numpy as np
-from source.crossover.point_crossover import PointCrossover
+from source.genetic_algorithm.crossover.point_crossover import PointCrossover
 
 
 def test_cross_genes_when_two_point_crossover():

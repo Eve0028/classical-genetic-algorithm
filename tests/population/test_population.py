@@ -1,6 +1,4 @@
-import pytest
-
-from source.population.population import Population
+from source.genetic_algorithm.population.population import Population
 
 
 def test_generate_individuals():

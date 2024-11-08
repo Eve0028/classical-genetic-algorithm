@@ -1,5 +1,5 @@
-from source.mutation.mutation import Mutation
-from source.population.individual import Individual
+from source.genetic_algorithm.mutation.mutation import Mutation
+from source.genetic_algorithm.population.individual import Individual
 import random
 
 class BoundaryMutation(Mutation):

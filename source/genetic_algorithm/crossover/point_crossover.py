@@ -1,9 +1,9 @@
 import numpy as np
 from typing import List
 
-from source.crossover.crossover import Crossover
-from source.population.individual import Individual
-from source.crossover.random_generator import RandomGenerator
+from source.genetic_algorithm.crossover.crossover import Crossover
+from source.genetic_algorithm.population.individual import Individual
+from source.genetic_algorithm.crossover.random_generator import RandomGenerator
 
 
 class PointCrossover(Crossover):

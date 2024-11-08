@@ -1,5 +1,5 @@
-from source.crossover.discrete_crossover import DiscreteCrossover
-from source.population.individual import Individual
+from source.genetic_algorithm.crossover.discrete_crossover import DiscreteCrossover
+from source.genetic_algorithm.population.individual import Individual
 import numpy as np
 
 

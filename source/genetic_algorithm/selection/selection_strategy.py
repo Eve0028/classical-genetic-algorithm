@@ -1,8 +1,11 @@
 from abc import ABC
 from typing import List
+import logging
 
-from source.population.individual import Individual
-from source.config.logging_config import logger
+from source.genetic_algorithm.population.individual import Individual
+from source.config.logging_config import get_logger
+
+logger = get_logger()
 
 
 class SelectionStrategy(ABC):

@@ -3,16 +3,18 @@ import optuna
 from optuna.pruners import MedianPruner
 import time
 from functools import partial
-# import torch
+import hydra
+from hydra.utils import instantiate
+from omegaconf import DictConfig, OmegaConf
 
-from source.evolution.evolution import Evolution
-from source.evolution.functions import SimpleFunctionEnum, ComplexFunctionEnum
-from source.evolution.strategies import SelectionStrategyEnum, CrossoverStrategyEnum, MutationStrategyEnum
-from source.inversion.inversion import Inversion
-from source.config.params import SIMPLE_FUNCTION_NAMES, NUM_VARIABLES, PRECISIONS, \
-    SIMPLE_DB_FILE, DB_PREFIX, COMPLEX_DB_FILE, COMPLEX_FUNCTION_NAMES
-from source.population.population import Population
-from source.config.logging_config import logger
+from source.genetic_algorithm.evolution.evolution import Evolution
+from source.genetic_algorithm.evolution.strategies import SelectionStrategyEnum, CrossoverStrategyEnum, \
+    MutationStrategyEnum
+from source.genetic_algorithm.inversion.inversion import Inversion
+from source.genetic_algorithm.population.population import Population
+from source.config.logging_config import setup_logging
+
+logger = setup_logging()
 
 
 def objective(trial: optuna.trial.Trial, function: callable, num_variables: int, start_interval: float,

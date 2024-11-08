@@ -1,5 +1,5 @@
-from source.crossover.uniform_crossover import UniformCrossover
-from source.population.individual import Individual
+from source.genetic_algorithm.crossover.uniform_crossover import UniformCrossover
+from source.genetic_algorithm.population.individual import Individual
 import numpy as np
 
 def test_uniform_crossover1():
