@@ -1,3 +1,5 @@
+import os
+
 from numpy import ndarray
 import numpy as np
 from matplotlib import pyplot as plt
@@ -5,7 +7,10 @@ from datetime import datetime
 
 
 class GraphCreator:
-    generated_data_folder = "generated_data"
+    def __init__(self, generated_data_folder: str = "generated_data"):
+        self.generated_data_folder = generated_data_folder
+        if self.generated_data_folder and not os.path.exists(self.generated_data_folder):
+            os.makedirs(self.generated_data_folder)
 
     def create_graphs(self, fitness_values: ndarray, search_minimum: bool):
         generations = np.arange(1, fitness_values.shape[0] + 1)
