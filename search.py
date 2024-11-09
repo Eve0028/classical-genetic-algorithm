@@ -47,13 +47,11 @@ def objective(trial: optuna.trial.Trial, function: callable, num_variables: int,
     selection_strategy = SelectionStrategyEnum[selection_strategy_type].value(
         selection_size if selection_size else tournament_size)
 
-    # elite_strategy = trial.suggest_categorical('elite_strategy', [True, False])
     elite_strategy = trial.suggest_categorical('elite_strategy', param_ranges['elite_strategy'])
     # elite_size = trial.suggest_int('elite_size', int(population_size / 100 * 4.5),
     #                                int(population_size / 100 * 4.5)) if elite_strategy else 0
     elite_size = trial.suggest_int('elite_size', *param_ranges['elite_size']) if elite_strategy else 0
 
-    # crossover_strategy_type = trial.suggest_categorical('crossover_strategy', ['POINT', 'DISCRETE', 'UNIFORM'])
     crossover_strategy_type = trial.suggest_categorical('crossover_strategy', param_ranges['crossover_strategy'])
     crossover_probability = trial.suggest_float('crossover_probability', *param_ranges['crossover_probability'])
     intersection_number = trial.suggest_int('intersection_number',
@@ -67,7 +65,6 @@ def objective(trial: optuna.trial.Trial, function: callable, num_variables: int,
         crossover_strategy = CrossoverStrategyEnum[crossover_strategy_type].value(crossover_size,
                                                                                   crossover_probability)
 
-    # mutation_strategy_type = trial.suggest_categorical('mutation_strategy', ['ONE_POINT', 'TWO_POINT', 'BOUNDARY'])
     mutation_strategy_type = trial.suggest_categorical('mutation_strategy', param_ranges['mutation_strategy'])
     mutation_probability = trial.suggest_float('mutation_probability', *param_ranges['mutation_probability'])
     mutation_strategy = MutationStrategyEnum[mutation_strategy_type].value(mutation_probability)

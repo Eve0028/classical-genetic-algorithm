@@ -66,8 +66,8 @@ def get_configuration() -> Evolution:
                             generate=True)
 
     first_best_ind = min(population.individuals, key=lambda x: function(x.decode_chromosomes_representation()))
-    print("First best individual: ", first_best_ind.chromosomes if first_best_ind else None)
-    print("First ind values: ", first_best_ind.decode_chromosomes_representation() if first_best_ind else None)
+    logger.info("First best individual: ", first_best_ind.chromosomes if first_best_ind else None)
+    logger.info("First ind values: ", first_best_ind.decode_chromosomes_representation() if first_best_ind else None)
 
     evolution = Evolution(
         individuals=population.individuals,
