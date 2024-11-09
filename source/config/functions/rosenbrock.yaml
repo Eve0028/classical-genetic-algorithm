@@ -1,0 +1,54 @@
+function_name: ROSENBROCK
+function:
+  _target_: benchmark_functions.Rosenbrock
+  n_dimensions: 3
+evaluate: False
+num_variables: 3
+start_interval: -2.048
+end_interval: 2.048
+precision: 3  # Precision in decimal places
+evolutions_number: 10
+optuna_n_trials: 30
+param_ranges:
+  population_size:
+    - 100
+    - 500
+  num_generations:
+    - 100
+    - 1000
+  selection_strategy:
+    - "TOURNAMENT"
+    - "ROULETTE"
+    - "BEST"
+  elite_strategy:
+    - True
+    - False
+  elite_size:
+    - 1
+    - 20
+  tournament_size:
+    - 2
+    - 10
+  selection_size:
+    - 50
+    - 90
+  crossover_strategy:
+    - "UNIFORM"
+    - "POINT"
+  intersection_number:
+    - 1
+    - 2
+  mutation_strategy:
+    - "TWO_POINT"
+    - "ONE_POINT"
+  crossover_probability:
+    - 0.6
+    - 0.9
+  mutation_probability:
+    - 0.05
+    - 0.1
+  inversion:
+    - True
+  inversion_probability:
+    - 0.01
+    - 0.1

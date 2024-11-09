@@ -1,0 +1,13 @@
+scipy
+setuptools
+benchmark_functions
+opfunu
+optuna
+sqlalchemy
+optuna-dashboard
+pytest
+numpy
+matplotlib
+datetime
+hydra-core
+omegaconf
