@@ -11,6 +11,7 @@ class GraphCreator:
         generations = np.arange(1, fitness_values.shape[0] + 1)
         self.create_fitness_values_graph(generations, fitness_values, search_minimum)
         self.create_standard_deviation_graph(generations, fitness_values)
+        self.create_mean_graph(generations, fitness_values)
 
     def create_fitness_values_graph(self, generations: ndarray, fitness_values: ndarray, search_minimum: bool) -> None:
         if search_minimum:
@@ -21,19 +22,26 @@ class GraphCreator:
         self.plot_data(generations, np.array([best_solutions]).reshape(-1, 1),
                        "Wykres zależności wartości funkcji celu od kolejnej iteracji",
                        "generacja",
-                       ["wartość funkcji celu"],
+                       "wartość funkcji celu",
                        "wykres_funkcji_celu_w_kolejnej_iteracji.png")
 
     def create_standard_deviation_graph(self, generations: ndarray, fitness_values: ndarray) -> None:
         std_fitness_values = np.std(fitness_values, axis=1)
-        means = np.mean(fitness_values, axis=1)
         self.save_data(generations, std_fitness_values, "funkcja_odchylenia_standardowego.txt")
-        self.save_data(generations, means, "średnie.txt")
-        self.plot_data(generations, np.column_stack((std_fitness_values, means)),
-                       "Wykres odchylenia standardowego i średniej w poszczególnych epokach",
+        self.plot_data(generations, std_fitness_values,
+                       "Wykres odchylenia standardowego w poszczególnych epokach",
                        "generacja",
-                       ["odchylenie standardowe", "średnia"],
-                       "wykres_funkcji_średniej_odchylenia.png")
+                       "odchylenie standardowe",
+                       "wykres_odchylenia.png")
+
+    def create_mean_graph(self, generations: ndarray, fitness_values: ndarray) -> None:
+        means = np.mean(fitness_values, axis=1)
+        self.save_data(generations, means, "średnie.txt")
+        self.plot_data(generations,  means,
+                       "Wykres średniej w poszczególnych epokach",
+                       "generacja",
+                       "średnia",
+                       "wykres_średniej.png")
 
     def save_data(self, x: ndarray, y: ndarray, filename: str) -> None:
         data = np.column_stack((x, y))
@@ -43,11 +51,10 @@ class GraphCreator:
 
     def plot_data(self, x: ndarray, y: ndarray, title: str, xlabel: str, ylabel: str, filename: str) -> None:
         plt.figure()
-        for i in range(len(y[0])):
-            plt.plot(x, y[:, i], label=ylabel[i])
+        plt.plot(x, y, label=ylabel)
         plt.title(title)
         plt.xlabel(xlabel)
-        plt.ylabel(", ".join(ylabel))
+        plt.ylabel(ylabel)
         plt.legend()
         current_time = datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
         plt.savefig(self.generated_data_folder+"/"+current_time+"_"+filename)
